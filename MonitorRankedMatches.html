@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+<meta charset="utf-8">
+<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<title></title>
+<style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .highlight {
+            background-color: yellow;
+        }
+
+        .playerLine {
+            display: inline
+        }
+
+        /*.playerLogLine {
+            display: inline;
+            float: left;
+        }*/
+
+        #log {
+            list-style-type: none;
+        }
+		#received {
+			display:none;
+			color: red;
+		}
+    </style>
+<script type="text/javascript">
+		var mainUrl = "https://ashesescalation-api-tachyon.stardock.net";
+        ion.sound({
+            sounds: [
+                {
+                    name: "graceful"
+                }
+            ],
+            volume: 0.5,
+            path: "sounds/",
+            preload: true
+        });
+
+        var shownError = false;
+        (function poll() {
+
+            var yourDate = new Date(); // for example
+
+            // the number of .net ticks at the unix epoch
+            var epochTicks = 621355968000000000;
+
+            // there are 10000 .net ticks per millisecond
+            var ticksPerMillisecond = 10000;
+
+            // calculate the total number of .net ticks for your date
+            var yourTicks = epochTicks + (yourDate.getTime() * ticksPerMillisecond);
+
+            
+            var url = mainUrl + "/v1/products/2641/matchmaking/currentplayers?t=";
+            $.ajax({
+                url: url + yourTicks,
+                type: "GET",
+                success: function (data) {
+                    processData(data);
+                },
+                dataType: "json",
+                complete: setTimeout(function () {
+                    poll()
+                }, 5000),
+                error: function () {
+                    if (shownError === false) {
+                        alert("Cannot connect.");
+                        shownError = true;
+                        $("#infoText").addClass("highlight");
+                        d = new Date();
+                        $('#log').append(
+                            $('<li>').append(d.toLocaleString() + " --> Error connecting to the server."));
+                    }
+
+                },
+                timeout: 2000
+            })
+        })();
+
+
+        var queueLog = {};
+
+        var curQueue = {}; // all players in queue in the current and previous poll
+        var prevQueue = {}; 
+
+        function processData(data) {
+			$("#TotalCount").text(" " + data.playerCount);
+			
+             $("#received").fadeIn(400,  function() {
+				$("#received").fadeOut(2000)
+				});
+
+
+            console.log("Ping")
+            var rankedPlayers = [];
+            var unrankedPlayers = [];
+
+            // Gather list of players (persona ids)
+            var teamSearch = data.searchingTeams;
+            if (teamSearch.length) {
+                var matchmakingPool = teamSearch[0];
+                for (var i = 0; i < matchmakingPool.teams.length; i++) {
+                    var team = matchmakingPool.teams[i];
+                    var player = team.players[0]
+                    var persona = player.persona;
+
+                    var isUnranked = (team.parameters.indexOf("unranked:true") >= 0)
+
+                    var playerObject = {
+                        persona: persona,
+                        score: team.score,
+						timeWaiting: team.timeWaiting,
+                        scoreRange: team.lowerRange + "~" + team.upperRange
+                    }
+
+                    if (isUnranked) {
+                        unrankedPlayers.push(playerObject)
+                        ion.sound.play("pop_cork");
+                    } else {
+                        rankedPlayers.push(playerObject);
+                        ion.sound.play("pop_cork");
+                    }
+                }
+            }
+
+            addPlayerInfo(rankedPlayers)
+            addPlayerInfo(unrankedPlayers)
+
+            // Refresh and regenerate the player display
+            $("#rankedPlayers").empty()
+            $("#unrankedPlayers").empty()
+            $("#RankedCount").text(" " + rankedPlayers.length)
+            $("#UnrankedCount").text(" " + unrankedPlayers.length)
+
+
+            for (var i = 0; i < rankedPlayers.length; i++) {
+                var player = rankedPlayers[i];
+                $("#rankedPlayers").append(makePlayerLine(player));
+            }
+
+            for (var i = 0; i < unrankedPlayers.length; i++) {
+                var player = unrankedPlayers[i];
+                $("#unrankedPlayers").append(makePlayerLine(player));
+            }
+
+            //Update log information
+
+
+
+            //update player log
+            for (var i = 0; i < rankedPlayers.length; i++) {
+                var player = rankedPlayers[i];
+                player.lastSeen = Date.now();
+                queueLog[player.persona] = player;
+            }
+            for (var i = 0; i < unrankedPlayers.length; i++) {
+                var player = unrankedPlayers[i];
+                player.lastSeen = Date.now();
+                queueLog[player.persona] = player;
+            }
+
+            // dump into a list
+            var queueLastSeen = [];
+
+            for (var playerId in queueLog) {
+                console.log(playerId)
+                queueLastSeen.push(queueLog[playerId]);
+            }
+
+
+            // sort with most recent time first.
+            queueLastSeen.sort(function (a, b) {
+                return b.lastSeen - a.lastSeen;
+            });
+
+            $("#log").empty()
+            for (var i = 0; i < queueLastSeen.length; i++) {
+                $("#log").append(makePlayerLogLine(queueLastSeen[i]));
+            }
+
+
+            // Maintain curQueue and prevQueue
+
+            prevQueue = {};
+            for(var persona in curQueue){
+                prevQueue[persona] = true;  
+            }
+            curQueue = {}
+            for(var i=0;i<rankedPlayers.length;i++){
+                player = rankedPlayers[i];
+                curQueue[player.persona] = true;
+            }
+            for(var i=0;i<unrankedPlayers.length;i++){
+                player = unrankedPlayers[i];
+                curQueue[player.persona] = true;
+            }
+
+            console.log(prevQueue)
+            console.log(curQueue)
+
+
+            //play a message if a join is detected.
+
+
+
+            playerJoined = false;
+            for(var persona in curQueue){
+                if(!prevQueue[persona]){
+                    playerJoined = true;
+                    ion.sound.play("graceful");
+                    break;
+                }
+            }
+
+
+
+        }
+
+        function makePlayerLine(player) {
+		var dur = moment.duration(player.timeWaiting);
+            var link = "https://www.ashesofthesingularity.com/metaverse#/personas/" + player.persona + "?graphTab=faction&graphType=ranked";
+            return "<li class='playerLine'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a> Time waiting: " +  dur.humanize() + "</li>"
+        }
+
+        function makePlayerLogLine(player) {
+		
+            var link = "https://www.ashesofthesingularity.com/metaverse#/personas/" + player.persona + "?graphTab=faction&graphType=ranked";
+            var timeDif = Date.now() - player.lastSeen;
+			var dur = moment.duration(timeDif);	
+            return "<li class='playerLogLine'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ")" + "</a> Last seen: " + dur.humanize() + " ago" + "</li>"
+        }
+
+        function msToTime(ms) {
+            hours = Math.floor(ms / 3600000), // 1 Hour = 36000 Milliseconds
+                minutes = Math.floor((ms % 3600000) / 60000), // 1 Minutes = 60000 Milliseconds
+                seconds = Math.floor(((ms % 360000) % 60000) / 1000) // 1 Second = 1000 Milliseconds
+
+            if (minutes == 0) {
+                return "Less than a minute"
+            } else if (hours == 0) {
+                return minutes + " minutes"
+            } else {
+                return hours + "hours " + minutes + " minutes"
+            }
+        }
+
+        function addPlayerInfo(players) {
+            for (var i = 0; i < players.length; i++) {
+                var player = players[i];
+                var info = getPlayerInfo(player.persona);
+                player.info = info;
+            }
+        }
+
+        function getPlayerInfo(persona) {
+
+            //reuse player info if exists
+            if (queueLog[persona]){
+                console.log("Lookup skipped");
+                return queueLog[persona].info;
+            }
+
+            var playerInfo;
+            jQuery.ajax({
+                url: mainUrl + '/v1/personas/' + persona,
+                success: function (data) {
+                    playerInfo = data;
+                },
+                type: "GET",
+                dataType: "json",
+                async: false
+            });
+            return {
+                name: playerInfo.name,
+                avatarURL: playerInfo.avatarUrlSmall
+            }
+        }
+
+    </script>
+</head>
+<body>
+<h1>Ashes of the Singularity Escalation</h1>by Chronopolize and Warren Churulich - Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a>
+<h3>Total number of players waiting for 1vs1 match: <span id="TotalCount"> 0</span></h3>
+<p>
+(Automatically updates every 5 seconds) <span id="received">-RECEIVED DATA FROM SERVER-</span>
+</p>
+<h3>Ranked 1v1:<span id="RankedCount"> 0</span> Players </h3>
+<ul id="rankedPlayers" display="inline-block"></ul>
+<h3>Unranked 1v1:<span id="UnrankedCount"> 0</span> Players</h3>
+<ul id="unrankedPlayers"></ul>
+<p>Log:</p>
+<ul id="log" display="block"></ul>
+</body></html>
