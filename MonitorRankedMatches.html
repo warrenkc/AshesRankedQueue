@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<!--<script src="https://cdn.jsdelivr.net/g/jquery@1.10.2,tether@1.4.0,bootstrap@4.0.0-alpha.6" type="text/javascript"></script>-->
+	
+	
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/js/ion.sound.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
@@ -10,38 +15,14 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<title></title>
-<style>
-        @import url('https://fonts.googleapis.com/css?family=Roboto');
-
-        body {
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .highlight {
-            background-color: yellow;
-        }
-
-        .playerLine {
-            display: inline
-        }
-
-        /*.playerLogLine {
-            display: inline;
-            float: left;
-        }*/
-
-        #log {
-            list-style-type: none;
-        }
-		#received {
-			display:none;
-			color: red;
-		}
-    </style>
+<title>Ashes of the Singularity Matches</title>
 <script type="text/javascript">
 		var mainUrl = "https://ashesescalation-api-tachyon.stardock.net";
         ion.sound({
@@ -298,16 +279,42 @@
     </script>
 </head>
 <body>
-<h1>Ashes of the Singularity Escalation</h1>by Chronopolize and Warren Churulich - Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a>
-<h3>Total number of players waiting for 1vs1 match: <span id="TotalCount"> 0</span></h3>
-<p>
-(Automatically updates every 5 seconds) <span id="received">-RECEIVED DATA FROM SERVER-</span>
-</p>
-	<h3>New! Slim Metaverse Beta</h3><a href="https://metaverse.engineer4business.com/">https://metaverse.engineer4business.com/</a>
-<h3>Ranked 1v1:<span id="RankedCount"> 0</span> Players </h3>
-<ul id="rankedPlayers" display="inline-block"></ul>
-<h3>Unranked 1v1:<span id="UnrankedCount"> 0</span> Players</h3>
-<ul id="unrankedPlayers"></ul>
+	<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+      <h1 class="display-4">Ashes of the Singularity Escalation</h1>
+      <p class="lead">by Chronopolize and Warren Churulich - Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a></p>
+	  <p class="lead"><strong>New!</strong> Slim Metaverse Beta: <a href="https://metaverse.engineer4business.com/">https://metaverse.engineer4business.com/</a></p>
+    </div>
+
+	<div class="text-center">
+		<h3>Total number of players waiting for 1vs1 match: <span id="TotalCount"> 0</span></h3>
+		<p class="lead">(automatically updates every 5 seconds)</p>
+		<p>&nbsp;<span id="received">-RECEIVED DATA FROM SERVER-</span></p>
+	</div>
+
+    <div class="container">
+      <div class="card-deck mb-3 text-center">
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Ranked 1v1</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title"><span id="RankedCount">0</span> Players</h1>
+            <ul class="list-unstyled mt-3 mb-4" id="rankedPlayers">
+            </ul>
+          </div>
+        </div>
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Unranked 1v1</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title"><span id="UnrankedCount">0</span> Players</h1>
+            <ul class="list-unstyled mt-3 mb-4" id="unrankedPlayers">
+            </ul>
+          </div>
+        </div>
+      </div>
+	<div><hr></div>
 <p>Log:</p>
 <ul id="log" display="block"></ul>
 </body></html>
