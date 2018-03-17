@@ -58,7 +58,7 @@
                 }, 5000),
                 error: function () {
                     if (shownError === false) {
-                        alert("Cannot connect.");
+                        console.log("Cannot connect.");
                         shownError = true;
                         $("#infoText").addClass("highlight");
                         d = new Date();
@@ -220,7 +220,7 @@
 
         function makePlayerLogLine(player) {
 		
-            var link = "https://www.ashesofthesingularity.com/metaverse#/personas/" + player.persona + "?graphTab=faction&graphType=ranked";
+            var link = "https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=" + player.persona + "&name=" + player.info.name;
             var timeDif = Date.now() - player.lastSeen;
 			var dur = moment.duration(timeDif);	
             return "<li class='playerLogLine'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ")" + "</a> Last seen: " + dur.humanize() + " ago" + "</li>"
@@ -287,8 +287,7 @@
 <body>
 	<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
       <h1 class="display-4">Ashes of the Singularity Escalation</h1>
-      <p class="lead">by Chronopolize and Warren Churulich - Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a></p>
-	  <p class="lead"><strong>New!</strong> Slim Metaverse Beta: <a href="https://metaverse.engineer4business.com/">https://metaverse.engineer4business.com/</a></p>
+      <p class="lead">by Chronopolize and Warren Churulich - Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a><br /><strong>New!</strong> Slim Metaverse Beta: <a href="https://metaverse.engineer4business.com/">https://metaverse.engineer4business.com/</a></p>
     </div>
 
 	<div class="text-center">
