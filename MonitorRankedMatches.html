@@ -1,24 +1,24 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<script src="https://cdn.jsdelivr.net/combine/npm/ion-sound@3.0.7,npm/moment@2.21.0,npm/jquery@3.3.1"></script>
-<meta charset="utf-8">
-<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script src="https://cdn.jsdelivr.net/combine/npm/ion-sound@3.0.7,npm/moment@2.21.0,npm/jquery@3.3.1"></script>
+    <meta charset="utf-8">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<title>Ashes of the Singularity Matches</title>
-<script type="text/javascript">
-		var mainUrl = "https://ashesescalation-api-tachyon.stardock.net";
+    <title>Ashes of the Singularity Matches</title>
+    <script type="text/javascript">
+        var mainUrl = "https://ashesescalation-api-tachyon.stardock.net";
         ion.sound({
             sounds: [
                 {
@@ -44,7 +44,7 @@
             // calculate the total number of .net ticks for your date
             var yourTicks = epochTicks + (yourDate.getTime() * ticksPerMillisecond);
 
-            
+
             var url = mainUrl + "/v1/products/2641/matchmaking/currentplayers?t=";
             $.ajax({
                 url: url + yourTicks,
@@ -75,14 +75,14 @@
         var queueLog = {};
 
         var curQueue = {}; // all players in queue in the current and previous poll
-        var prevQueue = {}; 
+        var prevQueue = {};
 
         function processData(data) {
-			$("#TotalCount").text(" " + data.playerCount);
-			
-             $("#received").fadeIn(400,  function() {
-				$("#received").fadeOut(2000)
-				});
+            $("#TotalCount").text(" " + data.playerCount);
+
+            $("#received").fadeIn(400, function () {
+                $("#received").fadeOut(2000)
+            });
 
 
             console.log("Ping")
@@ -103,7 +103,7 @@
                     var playerObject = {
                         persona: persona,
                         score: team.score,
-						timeWaiting: team.timeWaiting,
+                        timeWaiting: team.timeWaiting,
                         scoreRange: team.lowerRange + "~" + team.upperRange
                     }
 
@@ -176,15 +176,15 @@
             // Maintain curQueue and prevQueue
 
             prevQueue = {};
-            for(var persona in curQueue){
-                prevQueue[persona] = true;  
+            for (var persona in curQueue) {
+                prevQueue[persona] = true;
             }
             curQueue = {}
-            for(var i=0;i<rankedPlayers.length;i++){
+            for (var i = 0; i < rankedPlayers.length; i++) {
                 player = rankedPlayers[i];
                 curQueue[player.persona] = true;
             }
-            for(var i=0;i<unrankedPlayers.length;i++){
+            for (var i = 0; i < unrankedPlayers.length; i++) {
                 player = unrankedPlayers[i];
                 curQueue[player.persona] = true;
             }
@@ -198,8 +198,8 @@
 
 
             playerJoined = false;
-            for(var persona in curQueue){
-                if(!prevQueue[persona]){
+            for (var persona in curQueue) {
+                if (!prevQueue[persona]) {
                     playerJoined = true;
                     ion.sound.play("graceful");
                     break;
@@ -211,18 +211,18 @@
         }
 
         function makePlayerLine(player) {
-		var dur = moment.duration(player.timeWaiting);
-		//https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=55834d01-13f3-445e-861f-0bc4769d87cc&name=Amelie
-		
+            var dur = moment.duration(player.timeWaiting);
+            //https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=55834d01-13f3-445e-861f-0bc4769d87cc&name=Amelie
+
             var link = "https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=" + player.persona + "&name=" + player.info.name;
-            return "<li class='playerLine'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a> Time waiting: " +  dur.humanize() + "</li>"
+            return "<li class='playerLine list-group-item'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a> Time waiting: " + dur.humanize() + "</li>"
         }
 
         function makePlayerLogLine(player) {
-		
+
             var link = "https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=" + player.persona + "&name=" + player.info.name;
             var timeDif = Date.now() - player.lastSeen;
-			var dur = moment.duration(timeDif);	
+            var dur = moment.duration(timeDif);
             return "<li class='playerLogLine'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ")" + "</a> Last seen: " + dur.humanize() + " ago" + "</li>"
         }
 
@@ -251,7 +251,7 @@
         function getPlayerInfo(persona) {
 
             //reuse player info if exists
-            if (queueLog[persona]){
+            if (queueLog[persona]) {
                 console.log("Lookup skipped");
                 return queueLog[persona].info;
             }
@@ -273,52 +273,53 @@
         }
 
     </script>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-6605473-18"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-6605473-18"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-  gtag('config', 'UA-6605473-18');
-</script>
+        gtag('config', 'UA-6605473-18');
+    </script>
 
 </head>
 <body>
-	<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-      <h1 class="display-4">Ashes of the Singularity Escalation</h1>
-      <p class="lead">by Chronopolize and Warren Churulich - Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a><br /><strong>New!</strong> Slim Metaverse Beta: <a href="https://metaverse.engineer4business.com/">https://metaverse.engineer4business.com/</a></p>
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Ashes of the Singularity Escalation</h1>
+        <p class="lead">by Chronopolize and Warren Churulich - Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a><br /><strong>New!</strong> Slim Metaverse Beta: <a href="https://metaverse.engineer4business.com/">https://metaverse.engineer4business.com/</a></p>
     </div>
-	<div class="text-center">
-		<h3>Total number of players waiting for 1vs1 match: <span id="TotalCount"> 0</span></h3>
-		<p class="lead">(automatically updates every 5 seconds) Note: If you wait more than 30 minutes you should rejoin the queue.</p>
-		<p>&nbsp;<span id="received">-RECEIVED DATA FROM SERVER-</span></p>
-	</div>
+    <div class="text-center">
+        <h3>Total number of players waiting for 1vs1 match: <span id="TotalCount"> 0</span></h3>
+        <p class="lead">(automatically updates every 5 seconds) Note: If you wait more than 30 minutes you should rejoin the queue.</p>
+        <p>&nbsp;<span id="received">-RECEIVED DATA FROM SERVER-</span></p>
+    </div>
     <div class="container">
-      <div class="card-deck mb-3 text-center">
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Ranked 1v1</h4>
-          </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title"><span id="RankedCount">0</span> Players</h1>
-            <ul class="list-unstyled mt-3 mb-4" id="rankedPlayers">
-            </ul>
-          </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="card">
+                    <div class="card-header h4">Ranked 1v1 -<span id="RankedCount">0</span> players waiting</div>
+                    <ul class="list-group list-group-flush" id="rankedPlayers"></ul>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="card">
+                    <div class="card-header h4">Ranked 1v1 -<span id="UnrankedCount">0</span> players waiting</div>
+                    <ul class="list-group list-group-flush" id="unrankedPlayers"></ul>
+                </div>
+            </div>
         </div>
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Unranked 1v1</h4>
-          </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title"><span id="UnrankedCount">0</span> Players</h1>
-            <ul class="list-unstyled mt-3 mb-4" id="unrankedPlayers">
-            </ul>
-          </div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <p>Log:</p>
+                <ul id="log" display="block"></ul>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <iframe src="https://discordapp.com/widget?id=135425716425719809&theme=dark" height="500" allowtransparency="true" frameborder="0"></iframe>
+            </div>
         </div>
-      </div>
-	<div><hr></div>
-<p>Log:</p>
-<ul id="log" display="block"></ul>
-<iframe src="https://discordapp.com/widget?id=135425716425719809&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"></iframe>
-</body></html>
+
+    </div>
+</body>
+</html>
