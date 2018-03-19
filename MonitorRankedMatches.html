@@ -92,27 +92,39 @@
             // Gather list of players (persona ids)
             var teamSearch = data.searchingTeams;
             if (teamSearch.length) {
-                var matchmakingPool = teamSearch[0];
-                for (var i = 0; i < matchmakingPool.teams.length; i++) {
-                    var team = matchmakingPool.teams[i];
-                    var player = team.players[0]
-                    var persona = player.persona;
+                //var matchmakingPool = teamSearch[0];
 
-                    var isUnranked = (team.parameters.indexOf("unranked:true") >= 0)
+                for (var j = 0; j < teamSearch.length; j++) {
+                    var matchmakingPool = teamSearch[j];
 
-                    var playerObject = {
-                        persona: persona,
-                        score: team.score,
-                        timeWaiting: team.timeWaiting,
-                        scoreRange: team.lowerRange + "~" + team.upperRange
-                    }
+                    for (var i = 0; i < matchmakingPool.teams.length; i++) {
+                        console.log(convertTachyonStringToJSON(matchmakingPool.filter))
+                        var filter = JSON.parse(convertTachyonStringToJSON(matchmakingPool.filter));
+                        console.log(filter);
 
-                    if (isUnranked) {
-                        unrankedPlayers.push(playerObject)
-                        ion.sound.play("pop_cork");
-                    } else {
-                        rankedPlayers.push(playerObject);
-                        ion.sound.play("pop_cork");
+                        var version = filter.version;
+                        var platform = filter.NetTransport == "Steam" ? "Steam" : "GOG";
+
+                        var team = matchmakingPool.teams[i];
+                        var player = team.players[0]
+                        var persona = player.persona;
+
+                        var isUnranked = (team.parameters.indexOf("unranked:true") >= 0)
+
+                        var playerObject = {
+                            persona: persona,
+                            score: team.score,
+                            timeWaiting: team.timeWaiting,
+                            scoreRange: team.lowerRange + "~" + team.upperRange,
+                            platform: platform,
+                            gameVersion: version
+                        }
+
+                        if (isUnranked) {
+                            unrankedPlayers.push(playerObject)
+                        } else {
+                            rankedPlayers.push(playerObject);
+                        }
                     }
                 }
             }
@@ -210,12 +222,23 @@
 
         }
 
+
+        //Returns: JSON string, note all fields will be in string format
+        function convertTachyonStringToJSON(str) {
+            //"NetTransport:Steam,gameType:multi,leaderboardType:Ranked,teamCount:2,teamSize:1,version:2.71.30987.0"
+            a = str.replace(/:/g, "\":\"");
+            a = a.replace(/,/g, "\",\"");
+            a = "{\"" + a + "\"" + "}";
+            return a;
+        }
+
         function makePlayerLine(player) {
             var dur = moment.duration(player.timeWaiting);
             //https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=55834d01-13f3-445e-861f-0bc4769d87cc&name=Amelie
 
             var link = "https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=" + player.persona + "&name=" + player.info.name;
-            return "<li class='playerLine list-group-item'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a> Time waiting: " + dur.humanize() + "</li>"
+            var versionText = "<span class='gameVersionText'>" + player.platform + " " + player.gameVersion + "</span>"
+            return "<li class='playerLine list-group-item'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a>" + " Time waiting: " + dur.humanize() + " [" + versionText + "]" + "</li>"
         }
 
         function makePlayerLogLine(player) {
@@ -304,7 +327,7 @@
             </div>
             <div class="col-sm-12 col-md-6">
                 <div class="card">
-                    <div class="card-header h4">Ranked 1v1 -<span id="UnrankedCount">0</span> players waiting</div>
+                    <div class="card-header h4">Unranked 1v1 -<span id="UnrankedCount">0</span> players waiting</div>
                     <ul class="list-group list-group-flush" id="unrankedPlayers"></ul>
                 </div>
             </div>
