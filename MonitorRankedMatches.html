@@ -232,13 +232,18 @@
             return a;
         }
 
+
+        var steamIcon = "<img src='https://i.imgur.com/g19kgsV.png' height='16' width = '16' alt='Steam' title='Steam'>"
+        var gogIcon = "<img src='https://i.imgur.com/8kdKNY0.png' height='16' width = '16' alt='GOG' title='GOG'>"
+
+
         function makePlayerLine(player) {
             var dur = moment.duration(player.timeWaiting);
             //https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=55834d01-13f3-445e-861f-0bc4769d87cc&name=Amelie
 
             var link = "https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=" + player.persona + "&name=" + player.info.name;
             var versionText = "<span class='gameVersionText'>" + player.platform + " " + player.gameVersion + "</span>"
-            return "<li class='playerLine list-group-item'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a>" + " Time waiting: " + dur.humanize() + " <span class='version'>[" + versionText + "]</span>" + "</li>"
+            return "<li class='playerLine list-group-item'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a>" + " Time waiting: " + dur.humanize() + " [" + versionText + "]" + "</li>"
         }
 
         function makePlayerLogLine(player) {
@@ -246,7 +251,9 @@
             var link = "https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=" + player.persona + "&name=" + player.info.name;
             var timeDif = Date.now() - player.lastSeen;
             var dur = moment.duration(timeDif);
-            return "<li class='playerLogLine'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ")" + "</a> Last seen: " + dur.humanize() + " ago" + "</li>"
+            var versionText = "<span class='gameVersionText'>" + player.platform + "</span>";
+            var platformIcon = player.platform == "Steam" ? steamIcon : gogIcon
+            return "<li class='playerLogLine'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") " + "</a> Last seen: " + dur.humanize() + " ago " + platformIcon + "</li>"
         }
 
         function msToTime(ms) {
@@ -305,11 +312,7 @@
 
         gtag('config', 'UA-6605473-18');
     </script>
-    <style>
-        .version {
-            font-size:.7em;
-        }
-    </style>
+
 </head>
 <body>
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
