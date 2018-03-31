@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    var personaId = "";
+    //"63ce2034-8a40-4c9e-b83d-2735c7206bd0"; // Chronopolize
+    var matchesToGet = 400; // should be multiple of 100
+
+
+    $(document).ready(function() {
+        // UrL Param code from https://www.sitepoint.com/url-parameters-jquery/
+        $.urlParam = function(name) {
+            var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
+            if (results == null) {
+                return null;
+            } else {
+                return results[1] || 0;
+            }
+        }
+
+        if ($.urlParam("persona") != null) { //if there is a persona passed in, use that one
+            personaId = $.urlParam("persona");
+            requestMatchData();
+        } else {
+            alert("No personaId given.\n" + "Example usage: " + "displayWinRate.html?persona=1b767f0b-7a7f-4470-834a-410d23d8dd88")
+        }
+    });
+
+
+    function requestMatchData() {
+
+        var url = window.location.href;
+        var params = url.split('?');
+
+
+        var numberOfBatches = matchesToGet / 100;
+
+        //load requests
+        var requests = []
+        for (var i = 0; i < numberOfBatches; i++) {
+            offset = i * 100;
+            var reqURL = "https://ashesescalation-api-tachyon.stardock.net/v1/products/2641/matches?personaid=" + personaId + "&offset=" + offset + "&count=100"
+
+            requests.push($.ajax({
+                url: reqURL,
+                delay: 1000 * i,
+                type: "GET",
+                success: function(data) {
+                    processData(data);
+                },
+                dataType: "json",
+                error: function() {
+                    console.log("Request to Ashes API failed")
+                }
+            }));
+        }
+
+
+        $.when.apply(null, requests).done(function() {
+            console.log("All done!");
+            computeStats();
+            // printResults();
+            displayResults();
+        });
+
+
+
+    }
+
+
+
+    var playerName;
+    var results = {};
+    var rankedGameCount = 0;
+    var rankedWins = 0;
+    var rankedWinPercent;
+
+    function processData(data) {
+
+        console.log("Recieved a response");
+
+        // Process the match data
+        for (var i = 0; i < data.length; i++) {
+            var match = data[i];
+            //Determine the result of the match.
+            if (match.dataString.type == "1v1Ranked") {
+                var player, opponent;
+                if (match.participants[0].personaId == personaId) {
+                    player = match.participants[0];
+                    opponent = match.participants[1];
+                } else {
+                    player = match.participants[1];
+                    opponent = match.participants[0];
+                }
+
+                var isVictory = player.dataInteger.result == 1 ? true : false;
+                var opponentName = opponent.name;
+                playerName = player.name; //lazy way of getting the player's name.
+
+                // console.log("Game result: " + isVictory + " vs" + opponentName);
+
+                // Update results:
+
+                if (results[opponentName] == null) {
+                    results[opponentName] = {
+                        wins: 0,
+                        losses: 0,
+                        numGames: 0
+                    }
+                }
+                if (isVictory) {
+                    rankedWins += 1;
+                    results[opponentName].wins += 1;
+                } else {
+                    results[opponentName].losses += 1;
+                }
+                rankedGameCount += 1;
+                results[opponentName].numGames += 1;
+            }
+
+
+        }
+    }
+
+    function computeStats() {
+        // Calculate relevant stats:
+        for (var opponent in results) {
+            if (results.hasOwnProperty(opponent)) {
+                var record = results[opponent];
+                record.winPercent = Math.round(1.0 * record.wins / record.numGames * 100);
+            }
+        }
+        rankedWinPercent = Math.round(1.0 * rankedWins / rankedGameCount * 100)
+    }
+
+    function printResults() {
+        console.log("---");
+        console.log("Player name: " + playerName);
+
+        console.log("From last " + rankedGameCount + " ranked games, Win rate: " + rankedWinPercent + "%")
+        for (var opponent in results) {
+            if (results.hasOwnProperty(opponent)) {
+                var record = results[opponent];
+                console.log("vs " + opponent + ": " + record.wins + "W " + record.losses + "L " + record.winPercent + "%")
+            }
+        }
+    }
+
+    function displayResults() {
+        $(".loadingMessage").hide();
+
+        var html = []
+        html.push("<div class ='infoText'>" + "Player: " + playerName +"</div>");
+
+        html.push("<div class ='infoText'>" + "From last " + rankedGameCount + " ranked games, Win rate: " + rankedWinPercent + "%" + "</div>");
+
+        html.push("<table class = 'matchupTable'>");
+        for (var opponent in results) {
+            if (results.hasOwnProperty(opponent)) {
+                var record = results[opponent];
+
+                // Do a Baeysian average for performance rating
+
+                var bConstant = 2;
+                var bWinPercent = Math.round(1.0 * (record.wins + bConstant) / (record.numGames + 2 * bConstant) * 100);
+
+                var val = bWinPercent;
+                var red = new Color(190, 20, 20),
+                    mid = new Color(160, 140, 0),
+                    green = new Color(0, 160, 0);
+
+                var start, end;
+
+                if (val >= 50) {
+                    start = mid,
+                        end = green;
+
+                    val = Math.min(val, 75);
+                    val = val - 50;
+                } else {
+                    start = red;
+                    end = mid;
+
+                    val = Math.max(val, 25);
+                    val = val - 25;
+                }
+
+                var startColors = start.getColors(),
+                    endColors = end.getColors();
+                var r = interpolate(startColors.r, endColors.r, 25, val);
+                var g = interpolate(startColors.g, endColors.g, 25, val);
+                var b = interpolate(startColors.b, endColors.b, 25, val);
+
+
+
+
+                var colorSpanTag = "<span style='color:" + "rgb(" + r + "," + g + "," + b + ")'>";
+
+                html.push(
+
+                    "<tr>" +
+                    "<td>" + wrap("vs " + opponent, colorSpanTag) + ":" + "</td>" +
+
+                    "<td>" + wrap(record.wins + "-" + record.losses, colorSpanTag) + "</td>" +
+
+                    "<td>" + wrap(record.winPercent + "%", colorSpanTag) + "</td> " +
+                    "</tr>");
+            }
+        }
+        html.push("</table");
+
+        // console.log(html.join(""));
+        $("#body").append(html.join(""));
+    }
+
+    //Below color code taken from: https://stackoverflow.com/questions/11849308/generate-colors-between-red-and-green-for-an-input-range
+    function interpolate(start, end, steps, count) {
+        var s = start,
+            e = end,
+            final = s + (((e - s) / steps) * count);
+        return Math.floor(final);
+    }
+
+    function Color(_r, _g, _b) {
+        var r, g, b;
+        var setColors = function(_r, _g, _b) {
+            r = _r;
+            g = _g;
+            b = _b;
+        };
+
+        setColors(_r, _g, _b);
+        this.getColors = function() {
+            var colors = {
+                r: r,
+                g: g,
+                b: b
+            };
+            return colors;
+        };
+    }
+    //End of Color code
+
+    //Helper functions
+
+    function wrap(target, str) {
+        var x = str;
+        if (str.length >= 2 && str.charAt(0) == "<") { //trim angle brackets if input seems to be a tag
+            x = str.substring(1, str.length - 1);
+        }
+        return "<" + x + ">" + target + "</" + x + ">";
+    }
+
+    </script>
+    <style>
+    .matchupTable {
+        border-collapse: collapse;
+        margin-top: 5px;
+        margin-left: 10px;
+    }
+    .infoText {
+         margin: 5px 0px 0px 10px;
+    }
+
+    tr,
+    td {
+        border: 1px solid rgb(160, 160, 255);
+        padding: 5px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class='loadingMessage'>If results do not show after 30 seconds, try refreshing the page.</div>
+    <div id='body'></div>
+</body>
