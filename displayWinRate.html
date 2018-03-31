@@ -9,26 +9,25 @@
     var matchesToGet = 400; // should be multiple of 100
 
 
-    // UrL Param code from https://www.sitepoint.com/url-parameters-jquery/
-    $.urlParam = function(name){
-    var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
-    if (results==null){
-       return null;
-    }
-    else{
-       return results[1] || 0;
-    }
-}
+    $(document).ready(function() {
+        // UrL Param code from https://www.sitepoint.com/url-parameters-jquery/
+        $.urlParam = function(name) {
+            var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
+            if (results == null) {
+                return null;
+            } else {
+                return results[1] || 0;
+            }
+        }
 
-    if($.urlParam("persona")!=null){ //if there is a persona passed in, use that one instead.
-        personaId = $.urlParam("persona");
-        requestMatchData();
-    }else{
-        alert("No personaId given.\n" + "Example usage: " + "displayWinRate.html?persona=1b767f0b-7a7f-4470-834a-410d23d8dd88")
-    }
+        if ($.urlParam("persona") != null) { //if there is a persona passed in, use that one
+            personaId = $.urlParam("persona");
+            requestMatchData();
+        } else {
+            alert("No personaId given.\n" + "Example usage: " + "displayWinRate.html?persona=1b767f0b-7a7f-4470-834a-410d23d8dd88")
+        }
+    });
 
-
-    
 
     function requestMatchData() {
 
@@ -62,7 +61,7 @@
         $.when.apply(null, requests).done(function() {
             console.log("All done!");
             computeStats();
-            printResults();
+            // printResults();
             displayResults();
         });
 
@@ -150,11 +149,12 @@
     }
 
     function displayResults() {
+        $(".loadingMessage").hide();
+
         var html = []
+        html.push("<div class ='infoText'>" + "Player: " + playerName +"</div>");
 
-        html.push("Player: " + playerName);
-
-        html.push("<div>" + "From last " + rankedGameCount + " ranked games, Win rate: " + rankedWinPercent + "%" + "</div>");
+        html.push("<div class ='infoText'>" + "From last " + rankedGameCount + " ranked games, Win rate: " + rankedWinPercent + "%" + "</div>");
 
         html.push("<table class = 'matchupTable'>");
         for (var opponent in results) {
@@ -167,7 +167,7 @@
                 var bWinPercent = Math.round(1.0 * (record.wins + bConstant) / (record.numGames + 2 * bConstant) * 100);
 
                 var val = bWinPercent;
-                red = new Color(190, 20, 20),
+                var red = new Color(190, 20, 20),
                     mid = new Color(160, 140, 0),
                     green = new Color(0, 160, 0);
 
@@ -189,47 +189,34 @@
 
                 var startColors = start.getColors(),
                     endColors = end.getColors();
-                var r = Interpolate(startColors.r, endColors.r, 25, val);
-                var g = Interpolate(startColors.g, endColors.g, 25, val);
-                var b = Interpolate(startColors.b, endColors.b, 25, val);
+                var r = interpolate(startColors.r, endColors.r, 25, val);
+                var g = interpolate(startColors.g, endColors.g, 25, val);
+                var b = interpolate(startColors.b, endColors.b, 25, val);
 
 
-                var wrap = function(target, str) {
-                    console.log(target + " --- " + str)
-                    var x = str;
-                    if (str.length >= 2 && str.charAt(0) == "<") {
-                        x = str.substring(1, str.length - 1); //trim angle brackets if input is a tag    
-                    }
-                    return "<" + x + ">" + target + "</" + x + ">";
-                }
+
+
+                var colorSpanTag = "<span style='color:" + "rgb(" + r + "," + g + "," + b + ")'>";
 
                 html.push(
 
                     "<tr>" +
-                    "<td>" + wrap("vs " + opponent, "<span style='color:" + "rgb(" + r + "," + g + "," + b + ")'>") + ":" + "</td>"
-                    //"<td>" + record.wins + "W " + "</td>" +
-                    //"<td>" + record.losses + "L " + "</td>" +
-                    //+ "<td>" + record.wins + "-" + record.losses + "</td>"
-                    +
-                    "<td>" + wrap(record.wins + "-" + record.losses, "<span style='color:" + "rgb(" + r + "," + g + "," + b + ")'>") + "</span></td>"
+                    "<td>" + wrap("vs " + opponent, colorSpanTag) + ":" + "</td>" +
 
-                    +
-                    "<td>" + wrap(record.winPercent + "%", "<span style='color:" + "rgb(" + r + "," + g + "," + b + ")'>") + "</td> " + " </tr>");
+                    "<td>" + wrap(record.wins + "-" + record.losses, colorSpanTag) + "</td>" +
+
+                    "<td>" + wrap(record.winPercent + "%", colorSpanTag) + "</td> " +
+                    "</tr>");
             }
         }
         html.push("</table");
 
-        console.log(html.join(""));
+        // console.log(html.join(""));
         $("#body").append(html.join(""));
     }
 
-    function generateResultsTable() {
-
-    }
-
     //Below color code taken from: https://stackoverflow.com/questions/11849308/generate-colors-between-red-and-green-for-an-input-range
-
-    function Interpolate(start, end, steps, count) {
+    function interpolate(start, end, steps, count) {
         var s = start,
             e = end,
             final = s + (((e - s) / steps) * count);
@@ -254,13 +241,27 @@
             return colors;
         };
     }
-
-
     //End of Color code
+
+    //Helper functions
+
+    function wrap(target, str) {
+        var x = str;
+        if (str.length >= 2 && str.charAt(0) == "<") { //trim angle brackets if input seems to be a tag
+            x = str.substring(1, str.length - 1);
+        }
+        return "<" + x + ">" + target + "</" + x + ">";
+    }
+
     </script>
     <style>
     .matchupTable {
         border-collapse: collapse;
+        margin-top: 5px;
+        margin-left: 10px;
+    }
+    .infoText {
+         margin: 5px 0px 0px 10px;
     }
 
     tr,
@@ -272,5 +273,6 @@
 </head>
 
 <body>
+    <div class='loadingMessage'>If results do not show after 30 seconds, try refreshing the page.</div>
     <div id='body'></div>
 </body>
