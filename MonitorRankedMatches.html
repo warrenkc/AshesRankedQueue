@@ -17,6 +17,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>Ashes of the Singularity Matches</title>
+    <style>
+    .title{
+        font-size: 32px;
+        margin-top: 0px;
+    } 
+    .gameVersionText {
+            font-size: 0.7em;
+    }
+    </style>
     <script type="text/javascript">
         var mainUrl = "https://ashesescalation-api-tachyon.stardock.net";
         ion.sound({
@@ -242,8 +251,8 @@
             //https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=55834d01-13f3-445e-861f-0bc4769d87cc&name=Amelie
 
             var link = "https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=" + player.persona + "&name=" + player.info.name;
-            var versionText = "<span class='gameVersionText'>" + player.platform + " " + player.gameVersion + "</span>"
-            return "<li class='playerLine list-group-item'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a>" + " Time waiting: " + dur.humanize() + " [" + versionText + "]" + "</li>"
+            var versionText = "<span class='gameVersionText'>" + "[" + player.platform + " " + player.gameVersion + "]" +  "</span>"
+            return "<li class='playerLine list-group-item'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a>" + " Time waiting: " + dur.humanize() + " " + versionText + "</li>"
         }
 
         function makePlayerLogLine(player) {
@@ -251,7 +260,7 @@
             var link = "https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=" + player.persona + "&name=" + player.info.name;
             var timeDif = Date.now() - player.lastSeen;
             var dur = moment.duration(timeDif);
-            var versionText = "<span class='gameVersionText'>" + player.platform + "</span>";
+            //var versionText = "<span class='gameVersionText'>" + player.platform + "</span>";
             var platformIcon = player.platform == "Steam" ? steamIcon : gogIcon
             return "<li class='playerLogLine'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") " + "</a> Last seen: " + dur.humanize() + " ago " + platformIcon + "</li>"
         }
@@ -316,8 +325,8 @@
 </head>
 <body>
     <div class="text-center">
-        <h4>Ranked Matches Queue Viewer for Ashes of the Singularity Escalation</h4>
-        <h3>Total number of players waiting for 1vs1 match: <span id="TotalCount"> 0</span></h3>
+        <div class='title'>Ashes Ranked Queue Monitor</div> 
+        <h3>Total number of players waiting for 1v1 match: <span id="TotalCount"> 0</span></h3>
         <p class="lead">(automatically updates every 5 seconds) Note: If you wait more than 30 minutes you should rejoin the queue.</p>
         <p>&nbsp;<span id="received">-RECEIVED DATA FROM SERVER-</span></p>
     </div>
@@ -343,7 +352,7 @@
                 <ul id="log" display="block"></ul>
             </div>
             <div class="col-sm-12 col-md-6">
-                <p class="lead">by Chronopolize and Warren Churulich<br />Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a><br /><strong>New!</strong> Slim Metaverse Beta: <a href="https://metaverse.engineer4business.com/">metaverse.engineer4business.com</a><br /><a href="https://discord.gg/AdMCRb8">Official Discord Server</a></p>
+                <p class="lead">by Chronopolize and Warren Churulich<br />Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a><br /><strong>New!</strong> Win Rate Tracker: <a href="https://warrenkc.github.io/AshesRankedQueue/displayWinRate.html">displayWinRate.html</a><br /> Slim Metaverse Beta: <a href="https://metaverse.engineer4business.com/">metaverse.engineer4business.com</a><br /><a href="https://discord.gg/AdMCRb8">Official Discord Server</a></p>
                 
             </div>
         </div>
