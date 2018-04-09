@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <head>
     <meta charset="utf-8">
@@ -20,11 +20,11 @@
             }
         }
 
-        if ($.urlParam("persona") != null) { //if there is a persona passed in, use that one
-            personaId = $.urlParam("persona");
+        if ($.urlParam("personaId") != null) { //if there is a persona passed in, use that one
+            personaId = $.urlParam("personaId");
             requestMatchData();
         } else {
-            alert("No personaId given.\n" + "Example usage: " + "displayWinRate.html?persona=1b767f0b-7a7f-4470-834a-410d23d8dd88")
+            alert("No personaId given.\n" + "Example usage: " + "displayWinRate.html?personaId=1b767f0b-7a7f-4470-834a-410d23d8dd88")
         }
     });
 
