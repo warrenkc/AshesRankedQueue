@@ -41,22 +41,9 @@
 
         var shownError = false;
         (function poll() {
-
-            var yourDate = new Date(); // for example
-
-            // the number of .net ticks at the unix epoch
-            var epochTicks = 621355968000000000;
-
-            // there are 10000 .net ticks per millisecond
-            var ticksPerMillisecond = 10000;
-
-            // calculate the total number of .net ticks for your date
-            var yourTicks = epochTicks + (yourDate.getTime() * ticksPerMillisecond);
-
-
-            var url = mainUrl + "/v1/products/2641/matchmaking/currentplayers?t=";
+            var url = mainUrl + "/v1/products/2641/matchmaking/currentplayers;
             $.ajax({
-                url: url + yourTicks,
+                url: url,
                 type: "GET",
                 success: function (data) {
                     processData(data);
@@ -352,7 +339,7 @@
                 <ul id="log" display="block"></ul>
             </div>
             <div class="col-sm-12 col-md-6">
-                <p class="lead">by Chronopolize and Warren Churulich<br />Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a><br /><strong>New!</strong> Win Rate Tracker: <a href="https://warrenkc.github.io/AshesRankedQueue/displayWinRate.html">displayWinRate.html</a><br /> Slim Metaverse Beta: <a href="https://metaverse.engineer4business.com/">metaverse.engineer4business.com</a><br /><a href="https://discordapp.com/invite/ashesofthesingularity">Official Discord Server</a></p>
+                <p class="lead">by Chronopolize and Warren Churulich<br />Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a><br /><strong>New!</strong> Win Rate Tracker on the following page:<br /> Slim Metaverse: <a href="https://metaverse.engineer4business.com/">metaverse.engineer4business.com</a><br /><a href="https://discordapp.com/invite/ashesofthesingularity">Official Discord Server</a></p>
                 
             </div>
         </div>
