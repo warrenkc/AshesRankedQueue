@@ -41,7 +41,7 @@
 
         var shownError = false;
         (function poll() {
-            var url = mainUrl + "/v1/products/2641/matchmaking/currentplayers;
+            var url = mainUrl + "/v1/products/2641/matchmaking/currentplayers";
             $.ajax({
                 url: url,
                 type: "GET",
@@ -69,7 +69,6 @@
 
 
         var queueLog = {};
-
         var curQueue = {}; // all players in queue in the current and previous poll
         var prevQueue = {};
 
@@ -102,7 +101,8 @@
                         var platform = filter.NetTransport == "Steam" ? "Steam" : "GOG";
 
                         var team = matchmakingPool.teams[i];
-                        var player = team.players[0]
+                        var player = team.players[0];
+                        var excludedPlayer = team.excludedPlayers[0];
                         var persona = player.persona;
 
                         var isUnranked = (team.parameters.indexOf("unranked:true") >= 0)
@@ -110,6 +110,7 @@
                         var playerObject = {
                             persona: persona,
                             score: team.score,
+                            excludedPlayer: excludedPlayer,
                             timeWaiting: team.timeWaiting,
                             scoreRange: team.lowerRange + "~" + team.upperRange,
                             platform: platform,
@@ -238,8 +239,9 @@
             //https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=55834d01-13f3-445e-861f-0bc4769d87cc&name=Amelie
 
             var link = "https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=" + player.persona + "&name=" + player.info.name;
-            var versionText = "<span class='gameVersionText'>" + "[" + player.platform + " " + player.gameVersion + "]" +  "</span>"
-            return "<li class='playerLine list-group-item'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a>" + " Time waiting: " + dur.humanize() + " " + versionText + "</li>"
+            var versionText = "<span class='gameVersionText'>" + "[" + player.platform + " " + player.gameVersion + "]" + "</span>";
+            var excludedPlayerText = '<a href="https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=' + player.excludedPlayer + '">' + getPlayerInfo(player.excludedPlayer).name + '</a>';
+            return "<li class='playerLine list-group-item'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a>" + " Time waiting: " + dur.humanize() + " " + versionText + "&nbsp; Excluded player: " + excludedPlayerText + "</li>"
         }
 
         function makePlayerLogLine(player) {
@@ -281,7 +283,7 @@
                 console.log("Lookup skipped");
                 return queueLog[persona].info;
             }
-
+          
             var playerInfo;
             jQuery.ajax({
                 url: mainUrl + '/v1/personas/' + persona,
