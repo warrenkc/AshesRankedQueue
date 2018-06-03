@@ -277,7 +277,14 @@
         }
 
         function getPlayerInfo(persona) {
-
+            //Check to see if the persona id is undefined.
+            if (persona == undefined)
+            {
+                return {
+                    name: "None",
+                    avatarURL: ""
+                }
+            }
             //reuse player info if exists
             if (queueLog[persona]) {
                 console.log("Lookup skipped");
