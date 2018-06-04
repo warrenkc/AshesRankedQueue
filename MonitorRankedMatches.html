@@ -240,8 +240,13 @@
 
             var link = "https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=" + player.persona + "&name=" + player.info.name;
             var versionText = "<span class='gameVersionText'>" + "[" + player.platform + " " + player.gameVersion + "]" + "</span>";
-            var excludedPlayerText = '<a href="https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=' + player.excludedPlayer + '">' + getPlayerInfo(player.excludedPlayer).name + '</a>';
-            return "<li class='playerLine list-group-item'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a>" + " Time waiting: " + dur.humanize() + " " + versionText + "&nbsp; Excluded player: " + excludedPlayerText + "</li>"
+
+            var excludedPlayerText = "";
+            if (player.excludedPlayer != undefined)
+            {
+                excludedPlayerText = '&nbsp; Excluded player: <a href="https://metaverse.engineer4business.com/PlayerDetails.aspx?personaId=' + player.excludedPlayer + '">' + getPlayerInfo(player.excludedPlayer).name + '</a>';
+            }
+            return "<li class='playerLine list-group-item'><a target='_blank' href='" + link + "'><img src=" + player.info.avatarURL + "></img> " + player.info.name + " (Rank: " + player.score + ") {" + player.scoreRange + "}" + "</a>" + " Time waiting: " + dur.humanize() + " " + versionText + excludedPlayerText + "</li>"
         }
 
         function makePlayerLogLine(player) {
