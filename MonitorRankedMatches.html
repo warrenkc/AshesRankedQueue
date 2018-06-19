@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -18,13 +18,23 @@
 
     <title>Ashes of the Singularity Matches</title>
     <style>
-    .title{
+    .title {
         font-size: 32px;
         margin-top: 0px;
     } 
     .gameVersionText {
             font-size: 0.7em;
     }
+	.btn-light:hover, .btn-light:focus, .btn-light:active, .btn-light.active, .open>.dropdown-toggle.btn-light {
+    color: #fff;
+    background-color: #0099ff;
+    border-color: #ffffff; 
+	}
+	.btn-toolbar {
+	display: flex;
+	justify-content: center;
+	}
+	
     </style>
     <script type="text/javascript">
         var mainUrl = "https://ashesescalation-api-tachyon.stardock.net";
@@ -326,38 +336,65 @@
 </head>
 <body>
     <div class="text-center">
+	<div class="btn-toolbar" role="toolbar">
+	<!-- <button type="button" class="btn btn-light" onclick="location.href = 'http://engineer4business.com/MonitorRankedMatches.html';">Home</button> --> 
+	<button type="button" class="btn btn-light" onclick="window.open('http://metaverse.engineer4business.com/', '_blank')">MetaVerse</button>
+	<button type="button" class="btn btn-light" onclick="window.open('http://metaverse.engineer4business.com/SearchPlayers.aspx', '_blank')">Search Players</button>
+	<button type="button" class="btn btn-light" onclick="window.open('http://metaverse.engineer4business.com/Downloads.aspx', '_blank')">Downloads</button>
+	<button type="button" class="btn btn-light" onclick="window.open('http://discordapp.com/invite/ashesofthesingularity', '_blank')">Ashes on Discord</button>
+	<button type="button" class="btn btn-light" onclick="window.open('http://www.ashesofthesingularity.com/', '_blank')">Ashes Website</button>
+	<button type="button" class="btn btn-light" onclick="window.open('http://www.stardock.com/', '_blank')">Stardock Website</button>
+	</div>
+	<br />
+	<br />
         <div class='title'>Ashes Ranked Queue Monitor</div> 
-        <h3>Total number of players waiting for 1v1 match: <span id="TotalCount"> 0</span></h3>
-        <p class="lead">(automatically updates every 5 seconds) Note: If you wait more than 30 minutes you should rejoin the queue.</p>
+        <h4>Total number of players waiting for 1v1 match: <span id="TotalCount"> 0</span></h4>
+        <p class="lead">The Queue Monitor automatically updates approximately every 5 seconds.<br />
+		If you wait more than 30 minutes you should rejoin the queue.</p>
         <p>&nbsp;<span id="received">-RECEIVED DATA FROM SERVER-</span></p>
     </div>
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-md-6">
                 <div class="card">
-                    <div class="card-header h4">Ranked 1v1 -<span id="RankedCount"> 0</span> players waiting</div>
+                    <div class="card-header h5">Ranked 1v1 -<span id="RankedCount"> 0</span> players waiting</div>
                     <ul class="list-group list-group-flush" id="rankedPlayers"></ul>
                 </div>
             </div>
             <div class="col-sm-12 col-md-6">
                 <div class="card">
-                    <div class="card-header h4">Unranked 1v1 -<span id="UnrankedCount"> 0</span> players waiting</div>
+                    <div class="card-header h5">Unranked 1v1 -<span id="UnrankedCount"> 0</span> players waiting</div>
                     <ul class="list-group list-group-flush" id="unrankedPlayers"></ul>
                 </div>
             </div>
         </div>
         <hr />
         <div class="row">
-            <div class="col-sm-12 col-md-6">
-                <p>Log:</p>
+            <div class="col-sm-12 col-md-4">
+			<div class="card-body">
+                <h5 class="card-title">Log:</h5>
                 <ul id="log" display="block"></ul>
+				</div>
             </div>
-            <div class="col-sm-12 col-md-6">
-                <p class="lead">by Chronopolize and Warren Churulich<br />Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a><br /><strong>New!</strong> Win Rate Tracker on the following page:<br /> Slim Metaverse: <a href="https://metaverse.engineer4business.com/">metaverse.engineer4business.com</a><br /><a href="https://discordapp.com/invite/ashesofthesingularity">Official Discord Server</a></p>
-                
+			<div class="col-sm-12 col-md-4">
+			<div class="card-body">
+                <h5 class="card-title">News:</h5>
+                Got some Ashes news?  Let us know!
+				</div>
             </div>
+            <div class="col-sm-12 col-md-4">
+			<div class="card-body">
+                <h5 class="card-title">Web Developers: </h5>		
+				Chronopolize<br />
+				Warren Churulich (Warren)<br />
+				Jason Green (Mr. Green)
+			</div>
+			</div>
         </div>
-
+		<br />
+		<br />
+		<br />
+		Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a><br />
     </div>
 </body>
 </html>
