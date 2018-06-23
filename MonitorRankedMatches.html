@@ -34,6 +34,22 @@
 	display: flex;
 	justify-content: center;
 	}
+	.container {
+	background-color: white;
+	opacity: 0.97;
+	}
+	
+	
+		body {
+  background: url('http://www.ashesofthesingularity.com/Images/sharedimage.png') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
+	
+	
 	
     </style>
     <script type="text/javascript">
@@ -335,35 +351,46 @@
 
 </head>
 <body>
-    <div class="text-center">
+
+    
 	<div class="btn-toolbar" role="toolbar">
 	<!-- <button type="button" class="btn btn-light" onclick="location.href = 'http://engineer4business.com/MonitorRankedMatches.html';">Home</button> --> 
-	<button type="button" class="btn btn-light" onclick="window.open('http://metaverse.engineer4business.com/', '_blank')">MetaVerse</button>
-	<button type="button" class="btn btn-light" onclick="window.open('http://metaverse.engineer4business.com/SearchPlayers.aspx', '_blank')">Search Players</button>
-	<button type="button" class="btn btn-light" onclick="window.open('http://metaverse.engineer4business.com/Downloads.aspx', '_blank')">Downloads</button>
-	<button type="button" class="btn btn-light" onclick="window.open('http://discordapp.com/invite/ashesofthesingularity', '_blank')">Ashes on Discord</button>
-	<button type="button" class="btn btn-light" onclick="window.open('http://www.ashesofthesingularity.com/', '_blank')">Ashes Website</button>
-	<button type="button" class="btn btn-light" onclick="window.open('http://www.stardock.com/', '_blank')">Stardock Website</button>
+	<button type="button" class="btn btn-light rounded-0" onclick="window.open('http://metaverse.engineer4business.com/', '_blank')">MetaVerse</button>
+	<button type="button" class="btn btn-light rounded-0" onclick="window.open('http://metaverse.engineer4business.com/SearchPlayers.aspx', '_blank')">Search Players</button>
+	<button type="button" class="btn btn-light rounded-0" onclick="window.open('http://metaverse.engineer4business.com/Downloads.aspx', '_blank')">Downloads</button>
+	<button type="button" class="btn btn-light rounded-0" onclick="window.open('http://discordapp.com/invite/ashesofthesingularity', '_blank')">Ashes on Discord</button>
+	<button type="button" class="btn btn-light rounded-0" onclick="window.open('http://www.ashesofthesingularity.com/', '_blank')">Ashes Website</button>
+	<button type="button" class="btn btn-light rounded-0" onclick="window.open('http://www.stardock.com/', '_blank')">Stardock Website</button>
 	</div>
+
 	<br />
-	<br />
-        <div class='title'>Ashes Ranked Queue Monitor</div> 
-        <h4>Total number of players waiting for 1v1 match: <span id="TotalCount"> 0</span></h4>
+		<div class="container rounded">
+<br />
+<div class="text-center">
+	<div class="card">
+	<div class="card-header">
+        <div class='title'>Ashes Online Multiplayer Queue Monitor</div> 
+        <h4>Player(s) Waiting for a 1v1 Match: <span id="TotalCount"> 0</span></h4>
         <p class="lead">The Queue Monitor automatically updates approximately every 5 seconds.<br />
 		If you wait more than 30 minutes you should rejoin the queue.</p>
-        <p>&nbsp;<span id="received">-RECEIVED DATA FROM SERVER-</span></p>
+		</div>
+		</div>
+		
+		<p></p>
+		<p>&nbsp;<span id="received">-RECEIVED DATA FROM SERVER-</span></p>
     </div>
+	
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-md-6">
                 <div class="card">
-                    <div class="card-header h5">Ranked 1v1 -<span id="RankedCount"> 0</span> players waiting</div>
+                    <div class="card-header h5">Ranked 1v1 -<span id="RankedCount"> 0</span> Players Waiting</div>
                     <ul class="list-group list-group-flush" id="rankedPlayers"></ul>
                 </div>
             </div>
             <div class="col-sm-12 col-md-6">
                 <div class="card">
-                    <div class="card-header h5">Unranked 1v1 -<span id="UnrankedCount"> 0</span> players waiting</div>
+                    <div class="card-header h5">Unranked 1v1 -<span id="UnrankedCount"> 0</span> Players Waiting</div>
                     <ul class="list-group list-group-flush" id="unrankedPlayers"></ul>
                 </div>
             </div>
@@ -379,7 +406,9 @@
 			<div class="col-sm-12 col-md-4">
 			<div class="card-body">
                 <h5 class="card-title">News:</h5>
-                Got some Ashes news?  Let us know!
+                <strong>June 24th, 2018</strong><br />
+				<a href="https://battlefy.com/ashes-of-the-singularity-discord/west-bi-weekly-tournament-june-24th-2018/5b29534934ca270a3f3d6689/info?infoTab=details">West-Bi-weekly Tournament</a>
+				
 				</div>
             </div>
             <div class="col-sm-12 col-md-4">
@@ -394,7 +423,11 @@
 		<br />
 		<br />
 		<br />
-		Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a><br />
+		<p align="center">
+		Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a>
+		</p>
+		<p align="center">&nbsp;</p>
     </div>
+	</div>
 </body>
 </html>
