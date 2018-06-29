@@ -9,13 +9,10 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <title>Ashes of the Singularity Matches</title>
     <style>
     .title {
@@ -38,20 +35,20 @@
 	background-color: white;
 	opacity: 0.97;
 	}
-
-	
 		body {
-  background: url('images/background.png') no-repeat center center fixed;
+  background: url('http://www.ashesofthesingularity.com/Images/sharedimage.png') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
   -o-background-size: cover;
 }
-
+.footer
+{
+font-size: 10px;
+font-family: Arial;
+}
+ </style>
 	
-	
-	
-    </style>
     <script type="text/javascript">
         var mainUrl = "https://ashesescalation-api-tachyon.stardock.net";
         ion.sound({
@@ -93,7 +90,6 @@
             })
         })();
 
-
         var queueLog = {};
         var curQueue = {}; // all players in queue in the current and previous poll
         var prevQueue = {};
@@ -104,7 +100,6 @@
             $("#received").fadeIn(400, function () {
                 $("#received").fadeOut(2000)
             });
-
 
             console.log("Ping")
             var rankedPlayers = [];
@@ -161,7 +156,6 @@
             $("#RankedCount").text(" " + rankedPlayers.length)
             $("#UnrankedCount").text(" " + unrankedPlayers.length)
 
-
             for (var i = 0; i < rankedPlayers.length; i++) {
                 var player = rankedPlayers[i];
                 $("#rankedPlayers").append(makePlayerLine(player));
@@ -173,8 +167,6 @@
             }
 
             //Update log information
-
-
 
             //update player log
             for (var i = 0; i < rankedPlayers.length; i++) {
@@ -196,7 +188,6 @@
                 queueLastSeen.push(queueLog[playerId]);
             }
 
-
             // sort with most recent time first.
             queueLastSeen.sort(function (a, b) {
                 return b.lastSeen - a.lastSeen;
@@ -207,9 +198,7 @@
                 $("#log").append(makePlayerLogLine(queueLastSeen[i]));
             }
 
-
             // Maintain curQueue and prevQueue
-
             prevQueue = {};
             for (var persona in curQueue) {
                 prevQueue[persona] = true;
@@ -227,10 +216,7 @@
             console.log(prevQueue)
             console.log(curQueue)
 
-
             //play a message if a join is detected.
-
-
 
             playerJoined = false;
             for (var persona in curQueue) {
@@ -244,7 +230,6 @@
 
 
         }
-
 
         //Returns: JSON string, note all fields will be in string format
         function convertTachyonStringToJSON(str) {
@@ -337,7 +322,6 @@
                 avatarURL: playerInfo.avatarUrlSmall
             }
         }
-
     </script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-6605473-18"></script>
@@ -345,16 +329,11 @@
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-
         gtag('config', 'UA-6605473-18');
     </script>
-
 </head>
 <body>
-
-    
 	<div class="btn-toolbar" role="toolbar">
-	<!-- <button type="button" class="btn btn-light" onclick="location.href = 'http://engineer4business.com/MonitorRankedMatches.html';">Home</button> --> 
 	<button type="button" class="btn btn-light rounded-0" onclick="window.open('http://metaverse.engineer4business.com/', '_blank')">MetaVerse</button>
 	<button type="button" class="btn btn-light rounded-0" onclick="window.open('http://metaverse.engineer4business.com/SearchPlayers.aspx', '_blank')">Search Players</button>
 	<button type="button" class="btn btn-light rounded-0" onclick="window.open('http://metaverse.engineer4business.com/Downloads.aspx', '_blank')">Downloads</button>
@@ -362,7 +341,6 @@
 	<button type="button" class="btn btn-light rounded-0" onclick="window.open('http://www.ashesofthesingularity.com/', '_blank')">Ashes Website</button>
 	<button type="button" class="btn btn-light rounded-0" onclick="window.open('http://www.stardock.com/', '_blank')">Stardock Website</button>
 	</div>
-
 	<br />
 		<div class="container rounded">
 <br />
@@ -374,23 +352,21 @@
         <p class="lead">The Queue Monitor automatically updates approximately every 5 seconds.<br />
 		If you wait more than 30 minutes you should rejoin the queue.</p>
 		</div>
-		</div>
-		
+		</div>	
 		<p></p>
 		<p>&nbsp;<span id="received">-RECEIVED DATA FROM SERVER-</span></p>
     </div>
-	
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-md-6">
                 <div class="card">
-                    <div class="card-header h5">Ranked 1v1 -<span id="RankedCount"> 0</span> Players Waiting</div>
+                    <div class="card-header h5">Ranked 1v1 -<span id="RankedCount"> 0</span> Player(s) Waiting</div>
                     <ul class="list-group list-group-flush" id="rankedPlayers"></ul>
                 </div>
             </div>
             <div class="col-sm-12 col-md-6">
                 <div class="card">
-                    <div class="card-header h5">Unranked 1v1 -<span id="UnrankedCount"> 0</span> Players Waiting</div>
+                    <div class="card-header h5">Unranked 1v1 -<span id="UnrankedCount"> 0</span> Player(s) Waiting</div>
                     <ul class="list-group list-group-flush" id="unrankedPlayers"></ul>
                 </div>
             </div>
@@ -406,8 +382,14 @@
 			<div class="col-sm-12 col-md-4">
 			<div class="card-body">
                 <h5 class="card-title">News:</h5>
+				<strong>June 30th, 2018 @ 1PM EDT<br />
+				Metal Mayhem</strong><br />
+				Host: Schism Navigator<br />
+				Voice:  Ashes on Discord
+				<br />
+				<br />
                 <strong>June 24th, 2018<br />
-				West-Bi-weekly Tournament Winners:</strong><br />
+				West-Bi-Weekly Tournament Winners:</strong><br />
 				1.  Chronopolize<br />
 				2.  Veknu<br />
 				3.  Johncandlish2016<br />		
@@ -426,10 +408,14 @@
 		<br />
 		<br />
 		<p align="center">
-		Bookmark this link: <a href="http://bit.ly/AshesRankedQueue">http://bit.ly/AshesRankedQueue</a>
 		</p>
-		<p align="center">&nbsp;</p>
+		<br />
     </div>
 	</div>
+	<br />
+	<div class="container" style="background: transparent; color: #ffffff;">
+	<div class="footer text-center" style="margin-bottom: 0">
+<p>This website is created for the Ashes of the Singularity Community. Ashes of the Singularity is a trademark of Stardock Entertainment, and is not the property of the developers of this website. Any and all images, content, information, etc. on this website might be property of Stardock Entertainment, so please contact them for the use of anything on this website. Stardock Entertainment's website is <a href="http://www.stardock.com" target="_blank">www.stardock.com</a>. Thank you for visiting!</p>
+</div>
 </body>
 </html>
