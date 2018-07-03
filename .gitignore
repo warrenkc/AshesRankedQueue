@@ -2,3 +2,7 @@
 *.exclude
 *.pubxml
 *.publishproj
+.vs/AshesRankedQueue/v15/.suo
+.vs/config/applicationhost.config
+.vs/VSWorkspaceState.json
+.vs/slnx.sqlite
